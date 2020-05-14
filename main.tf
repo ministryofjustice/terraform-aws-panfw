@@ -28,6 +28,9 @@ locals {
   ])
 }
 
+variable "tags" {
+  default = {}
+}
 
 
 output "test" {
