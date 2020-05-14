@@ -1,7 +1,7 @@
 variable "firewalls" {
   default = {
     firewall-a-tmp = {
-      
+
       interfaces = [
         { name = "eth0", subnet = "test", index = 0, public_ip = true },
         { name = "eth1", subnet = "test", index = 1, public_ip = true },
@@ -45,9 +45,7 @@ resource "aws_network_interface" "eni-management" {
   security_groups   = each.value.secrity_groups
   source_dest_check = lookup(each.value, "source_dest_check", true)
 
-  tags = merge(var.tags, {
-    Name = each.key
-  }
+  tags = merge(var.tags, { Name = each.key })
 }
 
 # resource "aws_eip" "eip-management" {
