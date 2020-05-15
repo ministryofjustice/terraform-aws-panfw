@@ -44,3 +44,9 @@ variable "key_name" {
 variable "user_data" {
   default = null
 }
+
+variable "custom_ami" {
+  description = "Custom AMI for launch template"
+  type        = string
+  default     = null
+}
