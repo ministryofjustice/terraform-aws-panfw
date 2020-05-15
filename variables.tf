@@ -34,7 +34,7 @@ variable "fw_product_map" {
 
 variable "instance_type" {
   description = "Instance type for FW"
-  default     = "m4.xlarge"
+  default     = "m5.xlarge"
 }
 
 variable "key_name" {
