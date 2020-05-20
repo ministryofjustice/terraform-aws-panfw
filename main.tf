@@ -59,6 +59,7 @@ resource "aws_instance" "this" {
   key_name                             = var.key_name
   user_data                            = var.user_data
   monitoring                           = false
+  iam_instance_profile                 = var.iam_instance_profile
 
   root_block_device {
     delete_on_termination = "true"

@@ -50,3 +50,9 @@ variable "custom_ami" {
   type        = string
   default     = null
 }
+
+variable "iam_instance_profile" {
+  description = "fw instance profile"
+  type        = string
+  default     = null
+}
