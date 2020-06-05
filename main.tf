@@ -29,14 +29,14 @@ data "aws_ami" "this" {
   owners = ["aws-marketplace"]
 }
 
-resource "aws_network_interface" "this" {
-  for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
-  subnet_id         = each.value.subnet
-  security_groups   = each.value.secrity_groups
-  source_dest_check = lookup(each.value, "source_dest_check", true)
+# resource "aws_network_interface" "this" {
+#   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
+#   subnet_id         = each.value.subnet
+#   security_groups   = each.value.secrity_groups
+#   source_dest_check = lookup(each.value, "source_dest_check", true)
 
-  tags = merge(var.tags, { Name = each.key })
-}
+#   tags = merge(var.tags, { Name = each.key })
+# }
 
 resource "aws_network_interface" "this" {
   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
