@@ -29,28 +29,30 @@ data "aws_ami" "this" {
   owners = ["aws-marketplace"]
 }
 
-# resource "aws_network_interface" "this" {
-#   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
-#   subnet_id         = each.value.subnet
-#   security_groups   = each.value.secrity_groups
-#   source_dest_check = lookup(each.value, "source_dest_check", true)
-
-#   tags = merge(var.tags, { Name = each.key })
-# }
-
 resource "aws_network_interface" "this" {
   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
-  subnet_id         = each.value.subnet_id
+  subnet_id         = each.value.subnet
   private_ips       = lookup(each.value, "private_ips", null)
-  security_groups   = lookup(each.value, "security_groups", null)
-  source_dest_check = lookup(each.value, "source_dest_check", false)
+  security_groups   = each.value.secrity_groups
+  source_dest_check = lookup(each.value, "source_dest_check", true)
   description       = lookup(each.value, "description", null)
-  attachment {
-    instance     = aws_instance.this[each.value.fw_name].id
-    device_index = lookup(each.value, "index", null)
-  }
+
   tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
 }
+
+# resource "aws_network_interface" "this" {
+#   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
+#   subnet_id         = each.value.subnet_id
+#   private_ips       = lookup(each.value, "private_ips", null)
+#   security_groups   = lookup(each.value, "security_groups", null)
+#   source_dest_check = lookup(each.value, "source_dest_check", false)
+#   description       = lookup(each.value, "description", null)
+#   attachment {
+#     instance     = aws_instance.this[each.value.fw_name].id
+#     device_index = lookup(each.value, "index", null)
+#   }
+#   tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
+# }
 
 resource "aws_eip" "this" {
   for_each = { for i in local.interfaces :
@@ -79,15 +81,15 @@ resource "aws_instance" "this" {
     delete_on_termination = "true"
   }
 
-  # dynamic "network_interface" {
-  #   for_each = each.value.interfaces
+  dynamic "network_interface" {
+    for_each = each.value.interfaces
 
-  #   content {
-  #     device_index         = network_interface.value.index
-  #     network_interface_id = aws_network_interface.this["${each.key}-${network_interface.value.name}"].id
-  #   }
+    content {
+      device_index         = network_interface.value.index
+      network_interface_id = aws_network_interface.this["${each.key}-${network_interface.value.name}"].id
+    }
 
-  # }
+  }
 
   tags = merge(var.tags, { Name = each.key })
 }
