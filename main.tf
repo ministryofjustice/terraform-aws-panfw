@@ -58,7 +58,7 @@ resource "aws_network_interface" "this" {
 
 # Creates the primary interface for the instance
 resource "aws_network_interface" "primary" {
-  for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i if i.index == 0 }
+  for_each          = { for i in local.interfaces : i.fw_name => i if i.index == 0 }
   subnet_id         = each.value.subnet_id
   private_ips       = lookup(each.value, "private_ips", null)
   security_groups   = lookup(each.value, "security_groups", null)
@@ -108,7 +108,7 @@ resource "aws_instance" "this" {
 
   network_interface {
     device_index         = 0
-    network_interface_id = aws_network_interface.primary["${each.key}-${network_interface.value.name}"].id
+    network_interface_id = aws_network_interface.primary[each.key].id
   }
 
   tags = merge(var.tags, { Name = each.key })
