@@ -41,8 +41,24 @@ data "aws_ami" "this" {
 # }
 
 # Attach interfaces to the instance where index is not 0
+# This will allow you to add / remove interfaces from the firewall without having to destroy the ec2 instance
 resource "aws_network_interface" "this" {
   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i if i.index != 0 }
+  subnet_id         = each.value.subnet_id
+  private_ips       = lookup(each.value, "private_ips", null)
+  security_groups   = lookup(each.value, "security_groups", null)
+  source_dest_check = lookup(each.value, "source_dest_check", false)
+  description       = lookup(each.value, "description", null)
+  attachment {
+    instance     = aws_instance.this[each.value.fw_name].id
+    device_index = lookup(each.value, "index", null)
+  }
+  tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
+}
+
+# Creates the primary interface for the instance
+resource "aws_network_interface" "primary" {
+  for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i if i.index == 0 }
   subnet_id         = each.value.subnet_id
   private_ips       = lookup(each.value, "private_ips", null)
   security_groups   = lookup(each.value, "security_groups", null)
@@ -83,14 +99,19 @@ resource "aws_instance" "this" {
   }
 
   # Attach index 0 interface to the instance
-  dynamic "network_interface" {
-    for_each = [for i in each.value.interfaces : i if i.index == 0]
+  # dynamic "network_interface" {
+  #   for_each = [for i in each.value.interfaces : i if i.index == 0]
 
-    content {
-      device_index         = network_interface.value.index
-      network_interface_id = aws_network_interface.this["${each.key}-${network_interface.value.name}"].id
-    }
+  #   content {
+  #     device_index         = network_interface.value.index
+  #     network_interface_id = aws_network_interface.this["${each.key}-${network_interface.value.name}"].id
+  #   }
 
+  # }
+
+  network_interface {
+    device_index         = 0
+    network_interface_id = aws_network_interface.primary["${each.key}-${network_interface.value.name}"].id
   }
 
   tags = merge(var.tags, { Name = each.key })
