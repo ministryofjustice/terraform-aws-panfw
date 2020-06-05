@@ -33,7 +33,7 @@ resource "aws_network_interface" "this" {
   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
   subnet_id         = each.value.subnet
   private_ips       = lookup(each.value, "private_ips", null)
-  security_groups   = each.value.secrity_groups
+  security_groups   = each.value.security_groups
   source_dest_check = lookup(each.value, "source_dest_check", true)
   description       = lookup(each.value, "description", null)
 
