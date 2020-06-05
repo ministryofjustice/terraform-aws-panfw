@@ -64,10 +64,7 @@ resource "aws_network_interface" "primary" {
   security_groups   = lookup(each.value, "security_groups", null)
   source_dest_check = lookup(each.value, "source_dest_check", false)
   description       = lookup(each.value, "description", null)
-  attachment {
-    instance     = aws_instance.this[each.value.fw_name].id
-    device_index = lookup(each.value, "index", null)
-  }
+
   tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
 }
 
