@@ -56,3 +56,8 @@ variable "iam_instance_profile" {
   type        = string
   default     = null
 }
+
+variable "public_ipv4_pool" {
+  description = "EC2 IPv4 address pool identifier"
+  default     = "amazon"
+}

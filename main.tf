@@ -29,17 +29,6 @@ data "aws_ami" "this" {
   owners = ["aws-marketplace"]
 }
 
-# resource "aws_network_interface" "this" {
-#   for_each          = { for i in local.interfaces : "${i.fw_name}-${i.name}" => i }
-#   subnet_id         = each.value.subnet_id
-#   private_ips       = lookup(each.value, "private_ips", null)
-#   security_groups   = each.value.security_groups
-#   source_dest_check = lookup(each.value, "source_dest_check", true)
-#   description       = lookup(each.value, "description", null)
-
-#   tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
-# }
-
 # Attach interfaces to the instance where index is not 0
 # This will allow you to add / remove interfaces from the firewall without having to destroy the ec2 instance
 resource "aws_network_interface" "this" {
@@ -56,7 +45,7 @@ resource "aws_network_interface" "this" {
   tags = merge(var.tags, lookup(each.value, "tags", {}), { "Name" = each.key })
 }
 
-# Creates the primary interface for the instance
+# Creates the primary interface (index 0) for the instance
 resource "aws_network_interface" "primary" {
   for_each          = { for i in local.interfaces : i.fw_name => i if i.index == 0 }
   subnet_id         = each.value.subnet_id
@@ -75,6 +64,7 @@ resource "aws_eip" "this" {
   }
   vpc               = true
   network_interface = aws_network_interface.this[each.key].id
+  public_ipv4_pool  = var.public_ipv4_pool
 
   tags = merge(var.tags, { Name = "${each.key}-eip" })
 }
@@ -95,17 +85,7 @@ resource "aws_instance" "this" {
     delete_on_termination = "true"
   }
 
-  # Attach index 0 interface to the instance
-  # dynamic "network_interface" {
-  #   for_each = [for i in each.value.interfaces : i if i.index == 0]
-
-  #   content {
-  #     device_index         = network_interface.value.index
-  #     network_interface_id = aws_network_interface.this["${each.key}-${network_interface.value.name}"].id
-  #   }
-
-  # }
-
+  # Attach primary interface to the instance
   network_interface {
     device_index         = 0
     network_interface_id = aws_network_interface.primary[each.key].id
