@@ -2,7 +2,7 @@ locals {
   interfaces = flatten([
     for fw_name, firewall in var.firewalls : [
       for if_name, interfaecs in firewall.interfaces : [
-        merge(interfaecs, { "fw_name" = fw_name })
+        merge(interfaecs, { "fw_name" = fw_name }, { "dns_prefix" = firewall.dns_prefix })
       ]
     ]
   ])
@@ -66,7 +66,7 @@ resource "aws_eip" "this" {
   network_interface = aws_network_interface.this[each.key].id
   public_ipv4_pool  = var.public_ipv4_pool
 
-  tags = merge(var.tags, { Name = "${each.key}-eip" })
+  tags = merge(var.tags, { Name = "${each.key}-eip" }, { DNS_Prefix = each.value.dns_prefix })
 }
 
 resource "aws_eip" "primary" {
