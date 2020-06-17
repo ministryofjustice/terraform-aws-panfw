@@ -60,7 +60,7 @@ resource "aws_network_interface" "primary" {
 resource "aws_eip" "this" {
   for_each = { for i in local.interfaces :
     "${i.fw_name}-${i.name}" => i
-    if lookup(i, "public_ip", null) != null && i.index != 0 ? true : false
+    if lookup(i, "public_ip", false) && i.index != 0 ? true : false
   }
   vpc               = true
   network_interface = aws_network_interface.this[each.key].id
@@ -72,7 +72,7 @@ resource "aws_eip" "this" {
 resource "aws_eip" "primary" {
   for_each = { for i in local.interfaces :
     i.fw_name => i
-    if lookup(i, "public_ip", null) != null && i.index == 0 ? true : false
+    if lookup(i, "public_ip", false) && i.index == 0 ? true : false
   }
   vpc               = true
   network_interface = aws_network_interface.primary[each.key].id
