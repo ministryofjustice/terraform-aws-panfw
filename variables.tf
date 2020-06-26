@@ -1,28 +1,29 @@
 
 variable "tags" {
-  description = "Optional Tags to apply to all resources"
+  description = "Optional tags to apply to all resources"
   type        = map(any)
   default     = {}
 }
 
 variable "firewalls" {
-  description = "map of firewalls to create"
+  description = "List of firewalls to create"
   type        = list(any)
   default     = []
 }
 
 variable "fw_version" {
-  description = "Firewall version to deploy."
+  description = "Firewall version to deploy"
   type        = string
   default     = "9.1.2"
 }
 
 variable "fw_product" {
-  description = "Type of VM-Series to deploy.  Can be one of 'byol', 'bundle-1', 'bundle-2'."
+  description = "Type of firewall product: one of 'byol', 'bundle-1', 'bundle-2'"
   default     = "byol"
 }
 
 variable "fw_product_map" {
+  description = "Firewall product codes"
   type = map(string)
 
   default = {
@@ -33,12 +34,15 @@ variable "fw_product_map" {
 }
 
 variable "instance_type" {
-  description = "Instance type for FW"
+  description = "EC2 instance type for firewall"
+  type        = string
   default     = "m5.xlarge"
 }
 
 variable "key_name" {
-  default = null
+  description = "AWS SSH key name"
+  type        = string
+  default     = null
 }
 
 variable "user_data" {
@@ -46,13 +50,13 @@ variable "user_data" {
 }
 
 variable "custom_ami" {
-  description = "Custom AMI for launch template"
+  description = "Custom AMI id to use instead of the usual fw_product_map"
   type        = string
   default     = null
 }
 
 variable "iam_instance_profile" {
-  description = "fw instance profile"
+  description = "Firewall instance IAM profile"
   type        = string
   default     = null
 }
