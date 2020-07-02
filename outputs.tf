@@ -11,5 +11,5 @@ output "network_interfaces" {
 }
 
 output "elastic_ips" {
-  value = aws_eip.this
+  value = matchkeys(values(aws_eip.this), keys(aws_eip.this), keys(aws_network_interface_attachment.this))
 }

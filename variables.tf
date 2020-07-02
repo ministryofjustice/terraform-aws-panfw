@@ -7,8 +7,8 @@ variable "tags" {
 
 variable "firewalls" {
   description = "map of firewalls to create"
-  type        = map(any)
-  default     = {}
+  type        = list(any)
+  default     = []
 }
 
 variable "fw_version" {
