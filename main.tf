@@ -6,7 +6,7 @@ locals {
         if_idx     = if_idx
         if_name    = i.name
         public_ip  = i.public_ip
-        dns_prefix = lookup(firewall, "dns_prefix", null)
+        dns_prefix = lookup(i, "dns_prefix", null)
         attr       = i
       }
     ]
