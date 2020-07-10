@@ -15,11 +15,11 @@ module "panfw" {
       name       = "myfw"
       interfaces = [
         {
-          name           = "mynic0"
-          subnet_id      = aws_subnet.this.id
-          security_group = aws_security_group.this.id
-          public_ip      = true
-          dns_prefix     = "myprefix"
+          name            = "mynic0"
+          subnet_id       = aws_subnet.this.id
+          security_groups = [aws_security_group.this.id]
+          public_ip       = true
+          dns_prefix      = "myprefix"
         }
       ]
     }
@@ -49,24 +49,25 @@ module "panfw" {
 | iam\_instance_profile | Firewall instance IAM profile | `string` | n/a | no |
 | public\_ipv4\_pool | EC2 IPv4 address pool identifier | n/a | "amazon" | no |
 
-### Map of firewalls - typical example
+### List of firewalls - typical example
 
 ```terraform
-  firewalls = {
-    myfw = {
+  firewalls = [
+    {
+      name = "myfw"
       interfaces = [
         {
-          description    = "The example network interface of Palo Alto firewall"
-          name           = "mynic0"
-          public_ip      = true
-          security_group = aws_security_group.this.id
-          subnet_id      = aws_subnet.this.id
-          private_ips    = [ "172.31.244.200" ]
-          dns_prefix     = "myprefix" // extra aws tag
+          description     = "The example network interface of Palo Alto firewall"
+          name            = "mynic0"
+          public_ip       = true
+          security_groups = [aws_security_group.this.id]
+          subnet_id       = aws_subnet.this.id
+          private_ips     = [ "172.31.244.200" ]
+          dns_prefix      = "myprefix" // (optional) extra aws tag bound to elastic IPs
         }
       ]
     }
-  }
+  ]
 ```
 
 ## Outputs
@@ -74,6 +75,5 @@ module "panfw" {
 | Name | Description |
 |------|-------------|
 | pafw | Created firewalls, as map of `aws_instance` objects |
-| primary\_public\_ip | Mapping of EC2 name to its primary public IP |
-| elastic\_ips | Non-primary Elastic IP addresses |
+| elastic\_ips | Elastic IP addresses |
 | network\_interfaces | All created non-primary network interfaces, as map of `aws_network_interface` objects |
