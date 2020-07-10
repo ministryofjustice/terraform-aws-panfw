@@ -1,4 +1,4 @@
-output "pafw" {
+output "firewalls" {
   value = aws_instance.this
 }
 
