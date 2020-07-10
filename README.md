@@ -8,7 +8,7 @@ This Terraform module deploys the Palo Alto Networks vm-series firewalls. Each f
 
 ```terraform
 module "panfw" {
-  source    = "git::https://spring.paloaltonetworks.com/mekanayake/terraform-aws-vmseries?ref=v0.1.0"
+  source    = "git::https://spring.paloaltonetworks.com/mekanayake/terraform-aws-vmseries?ref=v0.2.1"
   key_name  = aws_key_pair.this.key_name
   firewalls = [
     {
