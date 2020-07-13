@@ -97,5 +97,5 @@ resource "aws_instance" "this" {
 
   # If firewall name is provided as tag use that instead of using each.key
   # This will ensure the user can later change the name of the firewall without destroying the aws_instance
-  tags = merge(var.tags, { Name = lookup(each.value.tag, "Name", each.key) })
+  tags = merge(var.tags, { Name = lookup(each.value.tags, "Name", each.key) })
 }
