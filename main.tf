@@ -14,6 +14,7 @@ locals {
 }
 
 data "aws_ami" "this" {
+  count       = var.custom_ami == null ? 1 : 0
   most_recent = true
 
   filter {
@@ -78,7 +79,7 @@ resource "aws_instance" "this" {
   disable_api_termination              = false
   instance_initiated_shutdown_behavior = "stop"
   ebs_optimized                        = true
-  ami                                  = var.custom_ami != null ? var.custom_ami : data.aws_ami.this.id
+  ami                                  = var.custom_ami != null ? var.custom_ami : data.aws_ami.this[0].id
   instance_type                        = var.instance_type
   key_name                             = var.key_name
   user_data                            = var.user_data
