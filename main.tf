@@ -2,12 +2,12 @@ locals {
   interfaces = flatten([
     for fw_name, firewall in var.firewalls : [
       for if_idx, i in firewall.interfaces : {
-        fw_name    = firewall.name
-        if_idx     = if_idx
-        if_name    = i.name
-        public_ip  = i.public_ip
-        dns_prefix = lookup(i, "dns_prefix", null)
-        attr       = i
+        fw_name   = firewall.name
+        if_idx    = if_idx
+        if_name   = i.name
+        public_ip = i.public_ip
+        # dns_prefix = lookup(i, "dns_prefix", null)
+        attr = i
       }
     ]
   ])
@@ -68,9 +68,10 @@ resource "aws_eip" "this" {
 
   tags = merge(
     var.tags,
-    { Name = "${each.key}-eip" },
-    { FW_Name = each.value.fw_name },
-    { DNS_Prefix = each.value.dns_prefix }
+    each.value.tags,
+    { Name = "${each.key}-eip" }
+    # { FW_Name = each.value.fw_name },
+    # { DNS_Prefix = each.value.dns_prefix }
   )
 }
 
