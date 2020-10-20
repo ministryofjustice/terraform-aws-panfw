@@ -68,7 +68,7 @@ resource "aws_eip" "this" {
 
   tags = merge(
     var.tags,
-    each.value.tags,
+    # each.value.tags,
     { Name = "${each.key}-eip" }
     # { FW_Name = each.value.fw_name },
     # { DNS_Prefix = each.value.dns_prefix }
