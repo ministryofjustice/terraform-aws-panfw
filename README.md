@@ -16,6 +16,7 @@ module "vmseries" {
     {
       name             = "mgmt"
       subnet_id        = subnet-00000000000000001
+      security_groups  = [sg-00000000000000001]
       create_public_ip = true
     }
   ]
