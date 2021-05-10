@@ -67,7 +67,7 @@ variable "interfaces" {
   - `eip_allocation_id`: (Optional|string) Associate an existing EIP to the ENI.
   - `create_public_ip`: (Optional|bool) Whether to create a public IP for the ENI. Default false.
   - `public_ipv4_pool`: (Optional|string) EC2 IPv4 address pool identifier. 
-  - `source_dest_check`: (Optional|bool) Whether to enable source destination checking for the ENI. Default true.
+  - `source_dest_check`: (Optional|bool) Whether to enable source destination checking for the ENI. Default false.
   - `security_groups`: (Optional|list) A list of Security Group IDs to assign to this interface. Default null.
   Example:
   ```
