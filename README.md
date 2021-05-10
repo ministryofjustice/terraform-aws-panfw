@@ -10,8 +10,8 @@ This Terraform module deploys the Palo Alto Networks vm-series firewalls. Each f
 module "vmseries" {
   source     = "github.com/ministryofjustice/terraform-aws-panfw"
 
-  name       = "fw00"
-  key_name   = "EC2-key-pair-name"
+  name           = "fw00"
+  ssh_key_name   = "EC2-key-pair-name"
   interfaces = [
     {
       name             = "mgmt"
