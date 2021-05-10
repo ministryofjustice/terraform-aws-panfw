@@ -7,21 +7,16 @@ This Terraform module deploys the Palo Alto Networks vm-series firewalls. Each f
 ## Usage
 
 ```terraform
-module "panfw" {
-  source    = "git::https://spring.paloaltonetworks.com/mekanayake/terraform-aws-vmseries?ref=v0.2.1"
-  key_name  = aws_key_pair.this.key_name
-  firewalls = [
+module "vmseries" {
+  source     = "github.com/ministryofjustice/terraform-aws-panfw"
+
+  name       = "fw00"
+  key_name   = "EC2-key-pair-name"
+  interfaces = [
     {
-      name       = "myfw"
-      interfaces = [
-        {
-          name            = "mynic0"
-          subnet_id       = aws_subnet.this.id
-          security_groups = [aws_security_group.this.id]
-          public_ip       = true
-          dns_prefix      = "myprefix"
-        }
-      ]
+      name             = "mgmt"
+      subnet_id        = subnet-00000000000000001
+      create_public_ip = true
     }
   ]
 }
