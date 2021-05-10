@@ -1,23 +1,22 @@
 
 variable "name" {
   description = "Name of the VM-Series virtual machine."
-  default     = "fw00"
   type        = string
 }
 
 variable "panos_version" {
-  description = "PAN-OS version of the firewall to deploy"
+  description = "PAN-OS version of the firewall to deploy."
   type        = string
   default     = "9.1.9"
 }
 
 variable "fw_product" {
-  description = "Type of firewall product: one of 'byol', 'bundle-1', 'bundle-2'"
+  description = "Type of firewall product: one of 'byol', 'bundle-1', 'bundle-2'."
   default     = "byol"
 }
 
 variable "fw_product_map" {
-  description = "Firewall product codes"
+  description = "Firewall product codes."
   type        = map(string)
 
   default = {
@@ -28,31 +27,32 @@ variable "fw_product_map" {
 }
 
 variable "custom_ami_id" {
-  description = "Custom AMI id to use instead of the usual fw_product_map"
+  description = "Custom AMI id to use instead of using an AMI published in the Marketplace."
   type        = string
   default     = null
 }
 
 variable "instance_type" {
-  description = "EC2 instance type for firewall"
+  description = "EC2 instance type for firewall."
   type        = string
   default     = "m5.xlarge"
 }
 
 variable "ssh_key_name" {
-  description = "AWS EC2 key pair name"
+  description = "AWS EC2 key pair name."
   type        = string
-  default     = null
 }
 
 variable "iam_instance_profile" {
-  description = "Firewall instance IAM profile"
+  description = "Firewall instance IAM profile."
   type        = string
   default     = null
 }
 
 variable "user_data" {
-  default = null
+  description = "User data to provide when launching the instance."
+  type        = string
+  default     = null
 }
 
 variable "interfaces" {
