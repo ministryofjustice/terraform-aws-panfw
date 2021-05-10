@@ -25,7 +25,8 @@ resource "aws_network_interface" "this" {
 
   subnet_id         = each.value.subnet_id
   private_ips       = try([each.value.private_ip_address], null)
-  source_dest_check = try(each.value.source_dest_check, true)
+  source_dest_check = try(each.value.source_dest_check, false)
+  security_groups   = try(each.value.security_groups, null)
   description       = try(each.value.description, null)
   tags              = merge(var.tags, { "Name" = each.value.name })
 }

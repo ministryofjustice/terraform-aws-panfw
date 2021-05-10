@@ -68,6 +68,7 @@ variable "interfaces" {
   - `create_public_ip`: (Optional|bool) Whether to create a public IP for the ENI. Default false.
   - `public_ipv4_pool`: (Optional|string) EC2 IPv4 address pool identifier. 
   - `source_dest_check`: (Optional|bool) Whether to enable source destination checking for the ENI. Default true.
+  - `security_groups`: (Optional|list) A list of Security Group IDs to assign to this interface. Default null.
   Example:
   ```
   interfaces =[
@@ -80,10 +81,12 @@ variable "interfaces" {
       name: "public"
       subnet_id: subnet-00000000000000002
       create_public_ip: true
+      source_dest_check: false
     },
     {
       name: "private"
       subnet_id: subnet-00000000000000003
+      source_dest_check: false
     },
   ]
   ```
