@@ -8,3 +8,8 @@ output "interfaces" {
   description = "List of VM-Series network interfaces. The elements of the list are `aws_network_interface` objects. The order is the same as `interfaces` input."
   value       = aws_network_interface.this
 }
+
+output "public_ips" {
+  description = "Map of public IPs. The keys represent the interface name, and the values represent the public IP."
+  value       = { for k, v in aws_eip_association.this : var.interfaces[k].name => aws_eip_association.this[k].public_ip }
+}
