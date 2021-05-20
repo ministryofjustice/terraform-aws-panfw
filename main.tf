@@ -31,20 +31,18 @@ resource "aws_network_interface" "this" {
   tags              = merge(var.tags, { "Name" = each.value.name })
 }
 
-
 resource "aws_eip" "this" {
   for_each = { for k, v in var.interfaces : k => v if try(v.create_public_ip, false) && !can(v.eip_allocation_id) }
 
-  vpc               = true
-  network_interface = aws_network_interface.this[each.key].id
-  public_ipv4_pool  = try(each.value.public_ipv4_pool, "amazon")
-  tags              = merge(var.tags, { "Name" = "${each.value.name}-eip" })
+  vpc              = true
+  public_ipv4_pool = try(each.value.public_ipv4_pool, "amazon")
+  tags             = merge(var.tags, { "Name" = "${each.value.name}-eip" })
 }
 
 resource "aws_eip_association" "this" {
-  for_each = { for k, v in var.interfaces : k => v if can(v.eip_allocation_id) }
+  for_each = { for k, v in var.interfaces : k => v if try(v.create_public_ip, false) || can(v.eip_allocation_id) }
 
-  allocation_id        = each.value.eip_allocation_id
+  allocation_id        = try(aws_eip.this[each.key].id, var.interfaces[each.key].eip_allocation_id)
   network_interface_id = aws_network_interface.this[each.key].id
 }
 
@@ -57,7 +55,6 @@ resource "aws_network_interface_attachment" "this" {
   network_interface_id = aws_network_interface.this[each.key].id
   device_index         = each.key
 }
-
 
 resource "aws_instance" "this" {
   disable_api_termination              = false

@@ -72,6 +72,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_interfaces"></a> [interfaces](#output\_interfaces) | List of VM-Series network interfaces. The elements of the list are `aws_network_interface` objects. The order is the same as `interfaces` input. |
+| <a name="output_interfaces"></a> [interfaces](#output\_interfaces) | Map of VM-Series network interfaces. The keys of the map are interface names. The values of the map are `aws_network_interface` objects. |
 | <a name="output_mgmt_ip_address"></a> [mgmt\_ip\_address](#output\_mgmt\_ip\_address) | VM-Series management IP address. If `create_public_ip` is `true` or `eip_allocation_id` is used, it is a public IP address, otherwise a private IP address. |
+| <a name="output_public_ips"></a> [public\_ips](#output\_public\_ips) | Map of public IPs. The keys of the map are interface names. The values of the map are associated public IPs |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
