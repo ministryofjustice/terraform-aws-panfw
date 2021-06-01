@@ -32,7 +32,7 @@ resource "aws_network_interface" "this" {
 }
 
 resource "aws_eip" "this" {
-  for_each = { for k, v in var.interfaces : k => v if try(v.create_public_ip, false) && !can(v.eip_allocation_id) }
+  for_each = { for k, v in var.interfaces : k => v if try(v.create_public_ip, false) && ! can(v.eip_allocation_id) }
 
   vpc              = true
   public_ipv4_pool = try(each.value.public_ipv4_pool, "amazon")
